@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IT Service Request System</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">IT</div>
+
+                <div>
+                    <h2>IT Support</h2>
+                    <p>Service Management</p>
+                </div>
+            </div>
+
+            <div class="menu-label">MAIN MENU</div>
+
+            <nav class="navigation">
+
+                <a href="#" class="nav-link active" data-page="dashboard">
+                    <span>▦</span>
+                    Dashboard
+                </a>
+
+                <a href="#" class="nav-link" data-page="requests">
+                    <span>▤</span>
+                    All Requests
+                </a>
+
+                <a href="#" class="nav-link" data-page="new-request">
+                    <span>＋</span>
+                    New Request
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>IT SERVICE SYSTEM</p>
+                <small>Version 1.0.0</small>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+
+                <div>
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-description">
+                        Overview of IT service requests
+                    </p>
+                </div>
+
+                <div class="user-profile">
+
+                    <div class="avatar">AD</div>
+
+                    <div>
+                        <strong>Administrator</strong>
+                        <small>IT Department</small>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- DASHBOARD PAGE -->
+            <section id="dashboard-page" class="page active">
+
+                <div class="welcome-section">
+
+                    <div>
+                        <h2>Welcome back, Administrator</h2>
+                        <p>
+                            Here's what's happening with your IT requests.
+                        </p>
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        onclick="showPage('new-request')"
+                    >
+                        + Create Request
+                    </button>
+
+                </div>
+
+
+                <!-- STATISTICS -->
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <p>Total Requests</p>
+                        <h2 id="total-count">0</h2>
+                        <span>All submitted requests</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Pending</p>
+                        <h2 id="pending-count">0</h2>
+                        <span>Waiting for review</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>In Progress</p>
+                        <h2 id="progress-count">0</h2>
+                        <span>Currently being handled</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <p>Completed</p>
+                        <h2 id="completed-count">0</h2>
+                        <span>Successfully resolved</span>
+                    </div>
+
+                </div>
+
+
+                <!-- CHART -->
+                <div class="content-card chart-card">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h3>Request Overview</h3>
+                            <p>Summary of request statuses</p>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="requestChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- RECENT REQUESTS -->
+                <div class="content-card">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h3>Recent Requests</h3>
+                            <p>Latest submitted requests</p>
+                        </div>
+
+                        <button
+                            class="text-btn"
+                            onclick="showPage('requests')"
+                        >
+                            View All
+                        </button>
+
+                    </div>
+
+                    <div id="recent-requests"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ALL REQUESTS PAGE -->
+            <section id="requests-page" class="page">
+
+                <div class="content-card">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h3>All Service Requests</h3>
+                            <p>Manage and track IT service requests</p>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="showPage('new-request')"
+                        >
+                            + New Request
+                        </button>
+
+                    </div>
+
+                    <div class="filter-bar">
+
+                        <input
+                            type="text"
+                            id="search-input"
+                            placeholder="Search requests..."
+                        >
+
+                        <select id="status-filter">
+                            <option value="All">All Statuses</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+
+                    </div>
+
+                    <div id="request-list"></div>
+
+                </div>
+
+            </section>
+
+
+           
+<!-- REQUEST DETAILS PAGE -->
+<section id="request-details-page" class="page">
+
+    <div class="content-card">
+
+        <div class="section-heading">
+
+            <div>
+                <h3>Request Details</h3>
+                <p>View complete information about this service request</p>
+            </div>
+
+            <button
+                class="secondary-btn"
+                onclick="showPage('requests')"
+            >
+                Back to Requests
+            </button>
+
+        </div>
+
+        <div class="details-container">
+
+            <div class="detail-item">
+                <span>Request ID</span>
+                <h3 id="detail-id">-</h3>
+            </div>
+
+            <div class="detail-item">
+                <span>Requester Name</span>
+                <h3 id="detail-requester">-</h3>
+            </div>
+
+            <div class="detail-item">
+                <span>Request Title</span>
+                <h3 id="detail-title">-</h3>
+            </div>
+
+            <div class="detail-item">
+                <span>Category</span>
+                <h3 id="detail-category">-</h3>
+            </div>
+
+            <div class="detail-item">
+                <span>Priority</span>
+                <h3 id="detail-priority">-</h3>
+            </div>
+
+            <div class="detail-item">
+                <span>Status</span>
+                <h3 id="detail-status">-</h3>
+            </div>
+
+            <div class="detail-item">
+                <span>Date Submitted</span>
+                <h3 id="detail-date">-</h3>
+            </div>
+
+            <div class="detail-item description-item">
+                <span>Problem Description</span>
+                <p id="detail-description">-</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+            <!-- NEW REQUEST PAGE -->
+            <section id="new-request-page" class="page">
+
+                <div class="content-card form-card">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h3>Create New Request</h3>
+                            <p>Submit a new IT service request</p>
+                        </div>
+
+                    </div>
+
+
+                    <form id="request-form">
+
+                        <div class="form-group">
+
+                            <label for="requester">
+                                Requester Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="requester"
+                                placeholder="Enter your name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="title">
+                                Request Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="title"
+                                placeholder="Enter request title"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label for="category">
+                                    Category
+                                </label>
+
+                                <select id="category" required>
+                                    <option value="">Select category</option>
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Network">Network</option>
+                                    <option value="Account Access">
+                                        Account Access
+                                    </option>
+                                    <option value="Other">Other</option>
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="priority">
+                                    Priority
+                                </label>
+
+                                <select id="priority" required>
+                                    <option value="">Select priority</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="description">
+                                Problem Description
+                            </label>
+
+                            <textarea
+                                id="description"
+                                rows="5"
+                                placeholder="Describe your problem..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="secondary-btn"
+                                onclick="showPage('dashboard')"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                            >
+                                Submit Request
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>
